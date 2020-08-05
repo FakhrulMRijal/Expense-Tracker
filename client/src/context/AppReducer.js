@@ -12,6 +12,7 @@ export default (state, action) => {
         transactions: state.transactions.filter(transaction => transaction._id !== action.payload)
       }
     case 'ADD_TRANSACTION':
+      console.log(action.payload)
       return {
         ...state,
         transactions: [...state.transactions, action.payload]

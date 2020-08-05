@@ -1,61 +1,61 @@
-const Transaction = require('../models/Transaction');
+const Transactions = require('../models/Transaction');
+const router = require('express').Router();
 
-// @desc    Get all transactions
-// @route   GET /api/v1/transactions
-// @access  Public
-exports.getTransactions = async (req, res, next) => {
+exports.get_Transactions = router.get('/', async (req, res) => {
   try {
-    const transactions = await Transaction.find();
+      console.log('GET_TRANSACTIONS')
 
-    return res.status(200).json({
-      success: true,
-      count: transactions.length,
-      data: transactions
-    });
-  } catch (err) {
-    return res.status(500).json({
-      success: false,
-      error: 'Server Error'
-    });
-  }
-}
+      const transactions = await Transactions.find()
+      
+      return res.status(200).json({
+          message : 'Success',
+          count : transactions.length,
+          data : transactions
+      })
+  } 
+  catch (error) {
+      console.log('ERROR_GET_TRANSACTIONS')
+      return res.status(500).json({
+          message : error
+      })
+  }           
+})
 
-// @desc    Add transaction
-// @route   POST /api/v1/transactions
-// @access  Public
-exports.addTransaction = async (req, res, next) => {
+exports.add_Transactions = router.post('/' , async (req, res, next) => {
   try {
-    const { text, amount } = req.body;
+    const { text, total } = req.body;
 
-    const transaction = await Transaction.create(req.body);
+    const transaction = await Transactions.create(req.body);
   
     return res.status(201).json({
       success: true,
       data: transaction
     }); 
   } catch (err) {
-    if(err.name === 'ValidationError') {
-      const messages = Object.values(err.errors).map(val => val.message);
-
-      return res.status(400).json({
-        success: false,
-        error: messages
+    if(!req.body.text) {
+        console.log('Error')
+      return res.status(404).json({
+        message: 'Please Fill the text'
       });
+    } else if(!req.body.total){
+        console.log('Total')
+        return res.status(400).json({
+          success: false,
+          message: 'Please Fill the Total'
+        });      
     } else {
+        console.log(err)
       return res.status(500).json({
         success: false,
-        error: 'Server Error'
+        error: err
       });
     }
   }
-}
+})
 
-// @desc    Delete transaction
-// @route   DELETE /api/v1/transactions/:id
-// @access  Public
-exports.deleteTransaction = async (req, res, next) => {
+exports.delete_Transactions = router.delete('/:id', async (req, res, next) => {
   try {
-    const transaction = await Transaction.findById(req.params.id);
+    const transaction = await Transactions.findById(req.params.id);
 
     if(!transaction) {
       return res.status(404).json({
@@ -77,4 +77,4 @@ exports.deleteTransaction = async (req, res, next) => {
       error: 'Server Error'
     });
   }
-}
+})

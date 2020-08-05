@@ -5,15 +5,16 @@ import { numberWithCommas } from '../utils/format';
 export const IncomeExpenses = () => {
   const { transactions } = useContext(GlobalContext);
 
-  const amounts = transactions.map(transaction => transaction.amount);
+  const increaseIncome = transactions.map(transaction => transaction.total);
+  const decreaseIncome = transactions.map(transaction => transaction.total)
 
-  const income = amounts
+  const income = increaseIncome
     .filter(item => item > 0)
     .reduce((acc, item) => (acc += item), 0)
     .toFixed(2);
 
   const expense = (
-    amounts.filter(item => item < 0).reduce((acc, item) => (acc += item), 0) *
+    decreaseIncome.filter(item => item < 0).reduce((acc, item) => (acc += item), 0) *
     -1
   ).toFixed(2);
 

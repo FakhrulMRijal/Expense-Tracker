@@ -1,6 +1,6 @@
 import React, { createContext, useReducer } from 'react';
 import AppReducer from './AppReducer';
-import axios from 'axios';
+import Axios from 'axios';
 
 // Initial state
 const initialState = {
@@ -19,7 +19,7 @@ export const GlobalProvider = ({ children }) => {
   // Actions
   async function getTransactions() {
     try {
-      const res = await axios.get('/api/v1/transactions');
+      const res = await Axios.get('/api/v1/transactions');
 
       dispatch({
         type: 'GET_TRANSACTIONS',
@@ -35,7 +35,7 @@ export const GlobalProvider = ({ children }) => {
 
   async function deleteTransaction(id) {
     try {
-      await axios.delete(`/api/v1/transactions/${id}`);
+      await Axios.delete(`/api/v1/transactions/${id}`);
 
       dispatch({
         type: 'DELETE_TRANSACTION',
@@ -57,12 +57,13 @@ export const GlobalProvider = ({ children }) => {
     }
 
     try {
-      const res = await axios.post('/api/v1/transactions', transaction, config);
+      const res = await Axios.post('/api/v1/transactions', transaction, config);
 
       dispatch({
         type: 'ADD_TRANSACTION',
         payload: res.data.data
       });
+      console.log('masuk')
     } catch (err) {
       dispatch({
         type: 'TRANSACTION_ERROR',
